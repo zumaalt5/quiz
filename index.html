@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sucht-Selbsttest</title>
+<style>
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;background:linear-gradient(135deg,#4f46e5,#06b6d4);min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fff;width:min(92vw,560px);border-radius:22px;padding:24px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+h1{margin:0 0 8px}#progress{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:18px 0}
+#bar{height:100%;width:0;background:#4f46e5;transition:.3s}
+.q{font-size:1.2rem;font-weight:600;margin:20px 0}
+button.opt{width:100%;padding:16px;margin:8px 0;border:none;border-radius:14px;background:#f3f4f6;font-size:1rem}
+button.opt:hover{background:#dbeafe}
+.small{color:#666;font-size:.9rem}
+#result{display:none;text-align:center}
+.score{font-size:3rem;font-weight:700}
+.again{background:#4f46e5;color:#fff}
+</style></head><body>
+<div class="card">
+<div id="quiz">
+<h1>🧠 Sucht-Selbsttest</h1>
+<div class="small">Keine Diagnose. Denke an Handy, Social Media, Gaming, Alkohol oder Zigaretten.</div>
+<div id="progress"><div id="bar"></div></div>
+<div id="count"></div>
+<div class="q" id="question"></div>
+<div id="opts"></div>
+</div>
+<div id="result">
+<h1>Dein Ergebnis</h1>
+<div class="score" id="pts"></div>
+<h2 id="title"></h2>
+<p id="desc"></p>
+<button class="opt again" onclick="location.reload()">Nochmal starten</button>
+</div>
+</div>
+<script>
+const qs=[
+"Ich nutze oder konsumiere etwas länger oder häufiger als geplant.",
+"Ich greife oft automatisch dazu.",
+"Ich werde unruhig, wenn ich es nicht nutzen oder konsumieren kann.",
+"Andere haben mich bereits darauf angesprochen.",
+"Ich vernachlässige dadurch Schule, Arbeit, Hobbys oder Schlaf.",
+"Ich wollte schon reduzieren, schaffe es aber nicht.",
+"Ich nutze oder konsumiere es gegen Stress oder schlechte Gefühle.",
+"Ich denke häufig daran."
+];
+const labels=["Nie","Manchmal","Oft","Fast immer"];
+let i=0,score=0;
+function render(){
+document.getElementById('count').textContent=`Frage ${i+1} von ${qs.length}`;
+document.getElementById('question').textContent=qs[i];
+document.getElementById('bar').style.width=((i)/qs.length*100)+'%';
+let o=document.getElementById('opts');o.innerHTML="";
+labels.forEach((l,v)=>{
+let b=document.createElement('button');b.className='opt';b.textContent=l;
+b.onclick=()=>{score+=v;i++; if(i<qs.length)render(); else finish();};
+o.appendChild(b);
+});
+}
+function finish(){
+document.getElementById('quiz').style.display='none';
+document.getElementById('result').style.display='block';
+document.getElementById('pts').textContent=score+"/24";
+let t,d;
+if(score<=5){t="🟢 Gewohnheit";d="Keine deutlichen Hinweise auf problematisches Verhalten.";}
+else if(score<=11){t="🟡 Auffällige Nutzung";d="Einige Gewohnheiten könnten problematisch werden.";}
+else if(score<=17){t="🟠 Problematischer Gebrauch";d="Das Verhalten beeinflusst bereits deinen Alltag.";}
+else{t="🔴 Hinweise auf eine mögliche Abhängigkeit";d="Mehrere typische Merkmale sind vorhanden. Das ersetzt keine professionelle Diagnose.";}
+document.getElementById('title').textContent=t;
+document.getElementById('desc').textContent=d;
+}
+render();
+</script></body></html>
